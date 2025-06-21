@@ -12,7 +12,11 @@ ApiBase=http://localhost:8000/v1
 ApiKey=your_api_key
 ```
 
-2. Install the required Python packages. A recent version of the `openai` and `sentence-transformers` libraries is needed.
+2. Install the required Python packages using `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
 
 3. Run the writer loop:
 
