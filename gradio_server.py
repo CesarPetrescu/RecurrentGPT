@@ -2,7 +2,7 @@ import gradio as gr
 import random
 from recurrentgpt import RecurrentGPT
 from human_simulator import Human
-from sentence_transformers import SentenceTransformer
+from openai_embedder import OpenAIEmbedder
 from utils import get_init, parse_instructions
 import re
 
@@ -11,7 +11,7 @@ _CACHE = {}
 
 
 # Build the semantic search model
-embedder = SentenceTransformer('multi-qa-mpnet-base-cos-v1')
+embedder = OpenAIEmbedder()
 
 def init_prompt(novel_type, description):
     if description == "":
