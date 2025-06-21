@@ -2,6 +2,7 @@
 
 RecurrentGPT generates long-form text through repeated calls to an OpenAI API compatible model. The configuration for the model and API endpoint is stored in `config.env` so the project can be used with local servers such as Ollama or LM Studio. Embeddings are fetched from the same API, so no local `torch` installation is needed.
 
+
 ## Getting Started
 
 1. Edit `config.env` with the details of your API server:
@@ -9,7 +10,6 @@ RecurrentGPT generates long-form text through repeated calls to an OpenAI API co
 ```bash
 ModelName=gpt-3.5-turbo
 ApiBase=http://localhost:8000/v1
-ApiKey=your_api_key
 EmbeddingModel=text-embedding-ada-002
 ```
 `EmbeddingModel` selects the embedding model used when calling the `/v1/embeddings` endpoint.
