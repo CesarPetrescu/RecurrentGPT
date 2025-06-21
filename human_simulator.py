@@ -20,37 +20,37 @@ class Human:
         user_edited_plan = self.input["output_instruction"]
 
         input_text = f"""
-        Now imagine you are a novelist writing a Chinese novel with the help of ChatGPT. You will be given a previously written paragraph (wrote by you), and a paragraph written by your ChatGPT assistant, a summary of the main storyline maintained by your ChatGPT assistant, and a plan of what to write next proposed by your ChatGPT assistant.
+        Now imagine you are an AI-powered document generator capable of producing comprehensive research papers and large formal documents. You will be given a previously written section (written by you), a section written by your assistant, a summary of the main topics maintained by your assistant, and a plan for the next section proposed by your assistant.
     I need you to write:
-    1. Extended Paragraph: Extend the new paragraph written by the ChatGPT assistant to twice the length of the paragraph written by your ChatGPT assistant.
-    2. Selected Plan: Copy the plan proposed by your ChatGPT assistant.
-    3. Revised Plan: Revise the selected plan into an outline of the next paragraph.
-    
-    Previously written paragraph:  
+    1. Extended Section: Expand the new section written by the assistant to twice its original length.
+    2. Selected Plan: Copy the plan proposed by your assistant.
+    3. Revised Plan: Refine the selected plan into a concise outline for the next section.
+
+    Previously written section:
     {previous_paragraph}
 
-    The summary of the main storyline maintained by your ChatGPT assistant:
+    Summary of the main topics maintained by your assistant:
     {memory}
 
-    The new paragraph written by your ChatGPT assistant:
+    New section written by your assistant:
     {writer_new_paragraph}
 
-    The plan of what to write next proposed by your ChatGPT assistant:
+    Plan for the next section proposed by your assistant:
     {user_edited_plan}
 
-    Now start writing, organize your output by strictly following the output format as below,所有输出仍然保持是中文:
-    
-    Extended Paragraph: 
-    <string of output paragraph>, around 40-50 sentences.
+    Now start writing, organize your output by strictly following the output format as below:
 
-    Selected Plan: 
+    Extended Section:
+    <string of output section>, around 40-50 sentences.
+
+    Selected Plan:
     <copy the plan here>
 
     Revised Plan:
     <string of revised plan>, keep it short, around 5-7 sentences.
 
     Very Important:
-    Remember that you are writing a novel. Write like a novelist and do not move too fast when writing the plan for the next paragraph. Think about how the plan can be attractive for common readers when selecting and extending the plan. Remember to follow the length constraints! Remember that the chapter will contain over 10 paragraphs and the novel will contain over 100 chapters. And the next paragraph will be the second paragraph of the second chapter. You need to leave space for future stories.
+    Remember that you are drafting a formal document. Write in an informative style and do not move too quickly when outlining the next section. Think about how the plan can remain engaging and coherent. Remember to follow the length constraints! The document will grow over many sections, so leave room for future content.
 
     """
         return input_text
