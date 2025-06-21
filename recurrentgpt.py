@@ -1,9 +1,6 @@
 from utils import get_content_between_a_b, get_api_response
-import torch
-
 import random
-
-from sentence_transformers import  util
+from openai_embedder import cosine_scores
 
 
 class RecurrentGPT:
@@ -14,8 +11,9 @@ class RecurrentGPT:
         self.long_memory = long_memory
         self.embedder = embedder
         if self.long_memory and not memory_index:
-            self.memory_index = self.embedder.encode(
-                self.long_memory, convert_to_tensor=True)
+            self.memory_index = self.embedder.encode(self.long_memory)
+        else:
+            self.memory_index = memory_index
         self.output = {}
 
     def prepare_input(self, new_character_prob=0.1, top_k=2):
@@ -23,14 +21,15 @@ class RecurrentGPT:
         input_paragraph = self.input["output_paragraph"]
         input_instruction = self.input["output_instruction"]
 
-        instruction_embedding = self.embedder.encode(
-            input_instruction, convert_to_tensor=True)
+        instruction_embedding = self.embedder.encode(input_instruction)[0]
 
         # get the top 3 most similar paragraphs from memory
 
-        memory_scores = util.cos_sim(
-            instruction_embedding, self.memory_index)[0]
-        top_k_idx = torch.topk(memory_scores, k=top_k)[1]
+        memory_scores = cosine_scores(
+            instruction_embedding, self.memory_index)
+        top_k_idx = sorted(range(len(memory_scores)),
+                           key=lambda i: memory_scores[i],
+                           reverse=True)[:top_k]
         top_k_memory = [self.long_memory[idx] for idx in top_k_idx]
         # combine the top 3 paragraphs
         input_long_term_memory = '\n'.join(
@@ -131,5 +130,4 @@ class RecurrentGPT:
                 f.write(f"Writer's output here:\n{response}\n\n")
 
         self.long_memory.append(self.input["output_paragraph"])
-        self.memory_index = self.embedder.encode(
-            self.long_memory, convert_to_tensor=True)
+        self.memory_index = self.embedder.encode(self.long_memory)
