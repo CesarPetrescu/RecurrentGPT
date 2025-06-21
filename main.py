@@ -7,7 +7,7 @@ from utils import get_init
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='ChatGPT-based automatic novel writing')
+        description='Automatic generation of drone research documents')
     parser.add_argument('--iter', type=int, default=1)
     parser.add_argument('--r_file', type=str, default='response.txt')
     parser.add_argument('--init_prompt', type=str, default='init_prompt.json')

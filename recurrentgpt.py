@@ -40,17 +40,17 @@ class RecurrentGPT:
         else:
             new_character_prompt = ""
 
-        input_text = f"""I need you to help me write a novel. Now I give you a memory (a brief summary) of 400 words, you should use it to store the key content of what has been written so that you can keep track of very long context. For each time, I will give you your current memory (a brief summary of previous stories. You should use it to store the key content of what has been written so that you can keep track of very long context), the previously written paragraph, and instructions on what to write in the next paragraph. 
+        input_text = f"""I need you to help me write a research document about drones. I will provide a memory (a brief summary) of 400 words to store key content so you can keep track of very long context. Each time, I will give you the current memory, a previously written section, and instructions on what to write in the next section.
     I need you to write:
-    1. Output Paragraph: the next paragraph of the novel. The output paragraph should contain around 20 sentences and should follow the input instructions.
+    1. Output Section: the next section of the document. The output section should contain around 20 sentences and should follow the input instructions.
     2. Output Memory: The updated memory. You should first explain which sentences in the input memory are no longer necessary and why, and then explain what needs to be added into the memory and why. After that you should write the updated memory. The updated memory should be similar to the input memory except the parts you previously thought that should be deleted or added. The updated memory should only store key information. The updated memory should never exceed 20 sentences!
-    3. Output Instruction:  instructions of what to write next (after what you have written). You should output 3 different instructions, each is a possible interesting continuation of the story. Each output instruction should contain around 5 sentences
+    3. Output Instruction: instructions of what to write next (after what you have written). You should output 3 different instructions, each describing a possible informative continuation. Each output instruction should contain around 5 sentences
     Here are the inputs: 
 
     Input Memory:  
     {self.short_memory}
 
-    Input Paragraph:
+    Input Section:
     {input_paragraph}
 
     Input Instruction:
@@ -60,8 +60,8 @@ class RecurrentGPT:
     {input_long_term_memory}
     
     Now start writing, organize your output by strictly following the output format as below:
-    Output Paragraph: 
-    <string of output paragraph>, around 20 sentences.
+    Output Section:
+    <string of output section>, around 20 sentences.
 
     Output Memory: 
     Rational: <string that explain how to update the memory>;
@@ -73,7 +73,7 @@ class RecurrentGPT:
     Instruction 3: <content for instruction 3>, around 5 sentences
 
     Very important!! The updated memory should only store key information. The updated memory should never contain over 500 words!
-    Finally, remember that you are writing a novel. Write like a novelist and do not move too fast when writing the output instructions for the next paragraph. Remember that the chapter will contain over 10 paragraphs and the novel will contain over 100 chapters. And this is just the beginning. Just write some interesting staffs that will happen next. Also, think about what plot can be attractive for common readers when writing output instructions. 
+    Finally, remember that you are writing a technical document about drone technology. Write in an informative style and do not move too fast when drafting instructions for the next section. The document will contain many sections, so leave room for future content. Think about how the document can remain engaging and coherent when providing the next instructions.
 
     Very Important: 
     You should first explain which sentences in the input memory are no longer necessary and why, and then explain what needs to be added into the memory and why. After that, you start rewrite the input memory to get the updated memory. 
@@ -84,7 +84,7 @@ class RecurrentGPT:
     def parse_output(self, output):
         try:
             output_paragraph = get_content_between_a_b(
-                'Output Paragraph:', 'Output Memory', output)
+                'Output Section:', 'Output Memory', output)
             output_memory_updated = get_content_between_a_b(
                 'Updated Memory:', 'Output Instruction:', output)
             self.short_memory = output_memory_updated
