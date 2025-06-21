@@ -25,7 +25,7 @@ def get_api_response(content: str, max_tokens=None):
         model=model_name,
         messages=[{
             'role': 'system',
-            'content': 'You are a helpful and creative assistant for writing novel.'
+            'content': 'You are a helpful and creative assistant for writing research documents about drones.'
         }, {
             'role': 'user',
             'content': content,
@@ -62,21 +62,22 @@ def get_init(init_text=None,text=None,response_file=None):
             response = f.read()
         f.close()
     paragraphs = {
-        "name":"",
-        "Outline":"",
-        "Paragraph 1":"",
-        "Paragraph 2":"",
-        "Paragraph 3":"",
+        "name": "",
+        "Outline": "",
+        "Paragraph 1": "",
+        "Paragraph 2": "",
+        "Paragraph 3": "",
         "Summary": "",
-        "Instruction 1":"",
-        "Instruction 2":"", 
-        "Instruction 3":""    
+        "Instruction 1": "",
+        "Instruction 2": "",
+        "Instruction 3": ""
     }
-    paragraphs['name'] = get_content_between_a_b('Name:','Outline',response)
-    
-    paragraphs['Paragraph 1'] = get_content_between_a_b('Paragraph 1:','Paragraph 2:',response)
-    paragraphs['Paragraph 2'] = get_content_between_a_b('Paragraph 2:','Paragraph 3:',response)
-    paragraphs['Paragraph 3'] = get_content_between_a_b('Paragraph 3:','Summary',response)
+
+    paragraphs['name'] = get_content_between_a_b('Title:', 'Outline', response)
+
+    paragraphs['Paragraph 1'] = get_content_between_a_b('Section 1:', 'Section 2:', response)
+    paragraphs['Paragraph 2'] = get_content_between_a_b('Section 2:', 'Section 3:', response)
+    paragraphs['Paragraph 3'] = get_content_between_a_b('Section 3:', 'Summary', response)
     paragraphs['Summary'] = get_content_between_a_b('Summary:','Instruction 1',response)
     paragraphs['Instruction 1'] = get_content_between_a_b('Instruction 1:','Instruction 2',response)
     paragraphs['Instruction 2'] = get_content_between_a_b('Instruction 2:','Instruction 3',response)
@@ -89,10 +90,10 @@ def get_init(init_text=None,text=None,response_file=None):
     # Sometimes it gives Chapter outline, sometimes it doesn't
     for line in lines:
         if line.startswith('Chapter'):
-            paragraphs['Outline'] = get_content_between_a_b('Outline:','Chapter',response)
+            paragraphs['Outline'] = get_content_between_a_b('Outline:', 'Chapter', response)
             break
     if paragraphs['Outline'] == '':
-        paragraphs['Outline'] = get_content_between_a_b('Outline:','Paragraph',response)
+        paragraphs['Outline'] = get_content_between_a_b('Outline:', 'Section', response)
 
 
     return paragraphs
