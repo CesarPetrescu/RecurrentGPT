@@ -13,25 +13,25 @@ _CACHE = {}
 # Build the semantic search model
 embedder = OpenAIEmbedder()
 
-def init_prompt(novel_type, description):
+def init_prompt(doc_type, description):
     if description == "":
         description = ""
     else:
         description = " about " + description
     return f"""
-Please write a {novel_type} novel{description} with 50 chapters. Follow the format below precisely:
+Please write a {doc_type} research document{description} focused on drone technology. Follow the format below precisely:
 
-Begin with the name of the novel.
-Next, write an outline for the first chapter. The outline should describe the background and the beginning of the novel.
-Write the first three paragraphs with their indication of the novel based on your outline. Write in a novelistic style and take your time to set the scene.
-Write a summary that captures the key information of the three paragraphs.
-Finally, write three different instructions for what to write next, each containing around five sentences. Each instruction should present a possible, interesting continuation of the story.
+Begin with the title of the document.
+Next, provide an outline for the introduction section describing the background and motivation.
+Write the first three sections based on your outline. Use an informative tone and elaborate on drone-related topics.
+Write a summary that captures the key information of these sections.
+Finally, write three different instructions for what to write next, each containing around five sentences. Each instruction should present a possible informative continuation of the document.
 The output format should follow these guidelines:
-Name: <name of the novel>
-Outline: <outline for the first chapter>
-Paragraph 1: <content for paragraph 1>
-Paragraph 2: <content for paragraph 2>
-Paragraph 3: <content for paragraph 3>
+Title: <title of the document>
+Outline: <outline for the introduction>
+Section 1: <content for section 1>
+Section 2: <content for section 2>
+Section 3: <content for section 3>
 Summary: <content of summary>
 Instruction 1: <content for instruction 1>
 Instruction 2: <content for instruction 2>
@@ -41,14 +41,14 @@ Make sure to be precise and follow the output format strictly.
 
 """
 
-def init(novel_type, description, request: gr.Request):
-    if novel_type == "":
-        novel_type = "Science Fiction"
+def init(doc_type, description, request: gr.Request):
+    if doc_type == "":
+        doc_type = "Technical"
     global _CACHE
     cookie = request.headers['cookie']
     cookie = cookie.split('; _gat_gtag')[0]
     # prepare first init
-    init_paragraphs = get_init(text=init_prompt(novel_type,description))
+    init_paragraphs = get_init(text=init_prompt(doc_type,description))
     # print(init_paragraphs)
     start_input_to_human = {
         'output_paragraph': init_paragraphs['Paragraph 3'],
@@ -63,7 +63,7 @@ def init(novel_type, description, request: gr.Request):
 
 Outline: {init_paragraphs['Outline']}
 
-Paragraphs:
+Sections:
 
 {start_input_to_human['input_paragraph']}"""
     long_memory = parse_instructions([init_paragraphs['Paragraph 1'], init_paragraphs['Paragraph 2']])
@@ -165,16 +165,15 @@ with gr.Blocks(title="RecurrentGPT", css="footer {visibility: hidden}", theme="d
     with gr.Tab("Auto-Generation"):
         with gr.Column():
             with gr.Row():
-                novel_type = gr.Textbox(
-                    label="Novel Type", placeholder="e.g. science fiction")
+                doc_type = gr.Textbox(
+                    label="Document Type", placeholder="e.g. technical")
                 description = gr.Textbox(label="Topic")
             btn_init = gr.Button(
-                "Init Novel Generation", elem_id="init_button")
-            gr.Examples(["Science Fiction", "Romance", "Mystery", "Fantasy",
-                        "Historical", "Horror", "Thriller", "Western", "Young Adult"],
-                        inputs=[novel_type], elem_id="example_selector")
+                "Init Document Generation", elem_id="init_button")
+            gr.Examples(["Technical", "Whitepaper", "Academic", "Proposal", "Survey"],
+                        inputs=[doc_type], elem_id="example_selector")
             written_paras = gr.Textbox(
-                label="Written Paragraphs (editable)", lines=21)
+                label="Written Sections (editable)", lines=21)
 
         with gr.Column():
             gr.Markdown("### Memory Module")
@@ -193,7 +192,7 @@ with gr.Blocks(title="RecurrentGPT", css="footer {visibility: hidden}", theme="d
                 label="Revised Instruction (from last step)", lines=2)
 
         btn_step = gr.Button("Next Step", elem_id="step_button")
-        btn_init.click(init, inputs=[novel_type, description], outputs=[
+        btn_init.click(init, inputs=[doc_type, description], outputs=[
             short_memory, long_memory, written_paras, instruction1, instruction2, instruction3])
         btn_step.click(step, inputs=[short_memory, long_memory, instruction1, instruction2, instruction3, written_paras], outputs=[
             short_memory, long_memory, written_paras, selected_plan, instruction1, instruction2, instruction3])
