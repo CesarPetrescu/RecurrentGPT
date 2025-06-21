@@ -1,12 +1,28 @@
+import os
 import re
 from openai import OpenAI
-import re
-api_key = os.getenv("OPENAI_API_KEY")
-api_base = os.getenv("OPENAI_API_BASE")
+
+# Load local configuration if available
+def load_env(path="config.env"):
+    if os.path.exists(path):
+        with open(path) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+load_env()
+
+api_key = os.getenv("ApiKey") or os.getenv("OPENAI_API_KEY")
+api_base = os.getenv("ApiBase") or os.getenv("OPENAI_API_BASE")
+model_name = os.getenv("ModelName", "gpt-4o-2024-05-13")
 def get_api_response(content: str, max_tokens=None):
-    client = OpenAI(api_key=api_key,base_url=api_base)
+    client = OpenAI(api_key=api_key, base_url=api_base)
     response = client.chat.completions.create(
-        model='gpt-4o-2024-05-13',
+        model=model_name,
         messages=[{
             'role': 'system',
             'content': 'You are a helpful and creative assistant for writing novel.'
