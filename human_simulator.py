@@ -21,6 +21,7 @@ class Human:
 
         input_text = f"""
         Now imagine you are an AI-powered document generator specializing in drone technology. You will be given a previously written section (written by you), a section written by your assistant, a summary of the main drone-related topics maintained by your assistant, and a plan for the next section proposed by your assistant.
+
     I need you to write:
     1. Extended Section: Expand the new section written by the assistant to twice its original length.
     2. Selected Plan: Copy the plan proposed by your assistant.
@@ -30,6 +31,7 @@ class Human:
     {previous_paragraph}
 
     Summary of the main drone topics maintained by your assistant:
+
     {memory}
 
     New section written by your assistant:
@@ -51,6 +53,7 @@ class Human:
 
     Very Important:
     Remember that you are drafting a formal document on drone technology. Write in an informative style and do not move too quickly when outlining the next section. Think about how the plan can remain engaging and coherent. Remember to follow the length constraints! The document will grow over many sections, so leave room for future content.
+
 
     """
         return input_text
