@@ -25,7 +25,7 @@ def get_api_response(content: str, max_tokens=None):
         model=model_name,
         messages=[{
             'role': 'system',
-            'content': 'You are a helpful and creative assistant for writing novel.'
+            'content': 'You are a helpful and creative assistant for writing research documents about drones.'
         }, {
             'role': 'user',
             'content': content,
